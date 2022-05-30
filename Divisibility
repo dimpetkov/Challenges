@@ -1,0 +1,44 @@
+package PracticeWebTasks;
+
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Divisibility {
+    public static void main(String[] args) {
+            Scanner scanner = new Scanner(System.in);
+            int arrLength = Integer.parseInt(scanner.nextLine());
+            String input = scanner.nextLine();
+        ArrayDeque<Integer> numbers = new ArrayDeque<>();
+        Arrays.stream(input.split("\\s+"))
+                .mapToInt(Integer::parseInt)
+                .forEach(numbers::push);
+
+        if(numbers.pop() % 10 == 0) {
+            System.out.println("Yes");
+        } else {
+            System.out.println("No");
+        }
+    }
+}
+
+
+// Problem
+// You are provided an array  of size  that contains non-negative integers. Your task is to determine whether the number that is formed by selecting the last digit of all the N numbers is divisible by .
+
+// Note: View the sample explanation section for more clarification.
+
+// Input format
+
+// First line: A single integer  denoting the size of array 
+// Second line:  space-separated integers.
+// Output format
+
+// If the number is divisible by , then print . Otherwise, print .
+
+Sample Input
+5
+85 25 65 21 84
+
+Sample Output
+No
