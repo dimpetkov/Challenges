@@ -1,1 +1,183 @@
 
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+
+// IMPORTANT: All code must be in this file, or it will not be submitted
+
+public class Main {
+
+    public static void main(String[] args) throws Exception
+    {
+        // Sample Test Case
+        final var sample = Map.of(List.of("A", "B", "C"), 4, List.of("B", "C", "A"), 3, List.of("C", "B", "A"), 2);
+
+        // Determine plurality winner (Part 1)
+        System.out.println("The plurality winner is: " + getPluralityWinner(sample));
+        // todo: add additional test cases for Part 1 here
+        final var sampleTwo = Map.of(List.of("A", "B", "C"), 4, List.of("B", "C", "A"), 4, List.of("C", "B", "A"), 2);
+        final var sampleThree = Map.of(List.of("A", "B", "C"), 4, List.of("B", "C", "A"), 7, List.of("C", "B", "A"), 2);
+        final var sampleFour = Map.of(List.of("A", "B", "C"), 4, List.of("B", "C", "A"), 4, List.of("C", "B", "A"), 4);
+        final var sampleFive = Map.of(List.of("A", "B", "C"), 4, List.of("B", "C", "A"), 4, List.of("C", "B", "A"), 5);
+        final var sampleSix = Map.of(List.of("A", "B", "C"), 4, List.of("A", "C", "B"), 4, List.of("C", "B", "A"), 3);
+        final var sampleSeven = Map.of(List.of("A", "B", "C"), 4, List.of("A", "C", "B"), 4, List.of("C", "B", "A"), 5);
+        final var sampleEight = Map.of(List.of("A", "C"), 4, List.of("C", "A"), 4);
+        System.out.println("The plurality winner is: " + getPluralityWinner(sampleTwo));
+        System.out.println("The plurality winner is: " + getPluralityWinner(sampleThree));
+        System.out.println("The plurality winner is: " + getPluralityWinner(sampleFour));
+        System.out.println("The plurality winner is: " + getPluralityWinner(sampleFive));
+        System.out.println("The plurality winner is: " + getPluralityWinner(sampleSix));
+        System.out.println("The plurality winner is: " + getPluralityWinner(sampleSeven));
+        System.out.println("The plurality winner is: " + getPluralityWinner(sampleEight));
+
+
+        // Determine ranked choice winner (Part 2)
+        System.out.println("The ranked choice winner is: " + getRankedChoiceWinner(sample));
+        // todo: add additional test cases for Part 2 here
+        final var sampleTwoTwo = Map.of(List.of("A", "B", "C"), 4, List.of("B", "C", "A"), 4, List.of("C", "B", "A"), 2);
+        final var sampleThreeTwo = Map.of(List.of("A", "B", "C"), 4, List.of("B", "C", "A"), 7, List.of("C", "B", "A"), 2);
+        final var sampleFourTwo = Map.of(List.of("B", "A", "C", "D"), 1, List.of("C", "A", "B", "D"), 1, List.of("D", "A", "B", "C"), 1);
+        final var sampleFiveTwo = Map.of(List.of("A", "B"), 5, List.of("B"), 4, List.of("C"), 3, List.of("D"), 2);
+        final var sampleSixTwo = Map.of(List.of("A", "B", "C"), 2, List.of("A", "C", "B"), 2, List.of("B", "A", "C"), 3);
+        final var sampleSevenTwo = Map.of(List.of("A", "B", "C"), 1, List.of("B", "A", "C"), 2, List.of("C", "A", "B"), 1);
+        final var sampleEightTwo = Map.of(List.of("B", "A"), 2, List.of("A", "B"), 2);
+        System.out.println("The ranked choice winner is: " + getRankedChoiceWinner(sampleTwoTwo));
+        System.out.println("The ranked choice winner is: " + getRankedChoiceWinner(sampleThreeTwo));
+        System.out.println("The ranked choice winner 4is: " + getRankedChoiceWinner(sampleFourTwo));
+        System.out.println("The ranked choice winner 5is: " + getRankedChoiceWinner(sampleFiveTwo));
+        System.out.println("The ranked choice winner 6is: " + getRankedChoiceWinner(sampleSixTwo));
+        System.out.println("The ranked choice winner 7is: " + getRankedChoiceWinner(sampleSevenTwo));
+        System.out.println("The ranked choice winner 8is: " + getRankedChoiceWinner(sampleEightTwo));
+
+
+    }
+
+    // implement this method for Part 1
+    public static String getPluralityWinner(Map<List<String>, Integer> ballots)
+    {
+        int maxVotes = Integer.MIN_VALUE;
+        String pluralityWinner = "";
+        for (Map.Entry<List<String>, Integer> entry : ballots.entrySet()) {
+            Integer value = entry.getValue();
+            List<String> data = entry.getKey();
+            if (pluralityWinner.equals(data.get(0))) {
+                maxVotes += value;
+            }
+            if (maxVotes < value) {
+                maxVotes = value;
+                pluralityWinner = data.get(0);
+            } else if ((maxVotes == value) && (pluralityWinner.charAt(0) > data.get(0).charAt(0))) {
+                pluralityWinner = data.get(0);
+            }
+        }
+
+        return pluralityWinner;
+    }
+
+
+    // implement this method for Part 2
+    public static String getRankedChoiceWinner(Map<List<String>, Integer> ballots)
+    {
+        int maxLengthArr = 0;
+        int matrixRows = ballots.size();
+        for (Map.Entry<List<String>, Integer> arr : ballots.entrySet()) {
+            int length = arr.getKey().size();
+            if (length > maxLengthArr) {
+                maxLengthArr = length;
+            }
+        }
+        String[][] matrix = new String[matrixRows][maxLengthArr + 1];
+        int currentMatrixRow = 0;
+        for (Map.Entry<List<String>, Integer> arr : ballots.entrySet()) {
+            List<String> candidates = arr.getKey();
+            String votes = String.valueOf(arr.getValue());
+            for (int i = 0; i < candidates.size(); i++) {
+                matrix[currentMatrixRow][i + 1] = candidates.get(i);
+            }
+            matrix[currentMatrixRow][0] = votes;
+            currentMatrixRow++;
+        }
+        // the matrix is DONE
+        // now to check for a winner
+        String winner = "";
+        String loser = "";
+        while (winner.isBlank()) {
+            int votesCount = 0;
+            Map<String, Integer> potentialWinner = new LinkedHashMap<>();
+            for (int i = 0; i < matrixRows; i++) {
+                int currentVotes = Integer.parseInt(matrix[i][0]);
+                votesCount += currentVotes;
+                if (matrix[i].length > 1) {
+                    if (potentialWinner.containsKey(matrix[i][1])) {
+                        Integer kayData = potentialWinner.get(matrix[i][1]);
+                        potentialWinner.replace(matrix[i][1], currentVotes + kayData);
+                    } else {
+                        potentialWinner.put(matrix[i][1], currentVotes);
+                    }
+                } else {
+                    i++;
+                }
+            }
+            int maxVotes = Integer.MIN_VALUE;
+            int minVotes = Integer.MAX_VALUE;
+            for (Map.Entry<String, Integer> entry : potentialWinner.entrySet()) {
+                int votes = entry.getValue();
+                if (votes > maxVotes) {
+                    maxVotes = votes;
+                }
+                if (votes < minVotes) {
+                    minVotes = votes;
+                }
+            }
+            if (maxVotes > votesCount / 2) {
+                for (Map.Entry<String, Integer> entry : potentialWinner.entrySet()) {
+                    if (entry.getValue() == maxVotes) {
+                        if (!winner.isBlank() && entry.getKey().charAt(0) < winner.charAt(0)) {
+                            winner = entry.getKey();
+                        } else if (winner.isBlank()){
+                            winner = entry.getKey();
+                        }
+                    }
+                }
+
+                return winner;
+
+            } else {
+                for (Map.Entry<String, Integer> entry : potentialWinner.entrySet()) {
+                    if (entry.getValue() == minVotes) {
+                        if (!loser.isBlank() && entry.getKey().charAt(0) > loser.charAt(0)) {
+                            loser = entry.getKey();
+                        } else if (loser.isBlank()){
+                            loser = entry.getKey();
+                        }
+                    }
+                }
+            }
+
+            while (!loser.isBlank()) {
+                String[][] newMatrix = new String[matrixRows][maxLengthArr + 1];
+                for (int i = 0; i < matrixRows; i++) {
+                    int collOld = 0;
+                    int collNew = 0;
+                    while (collOld < matrix[i].length) {
+                        if (matrix[i][collOld] == null) {
+                            break;
+                        } else if (matrix[i][collOld].equals(loser)) {
+                            collOld++;
+                        } else {
+                            newMatrix[i][collNew] = matrix[i][collOld];
+                            collNew++;
+                            collOld++;
+                        }
+                    }
+                }
+                for (int i = 0; i < matrixRows; i++) {
+                    if (maxLengthArr + 1 >= 0) System.arraycopy(newMatrix[i], 0, matrix[i], 0, maxLengthArr + 1);
+                }
+                loser = "";
+            }
+        }
+        return null;
+    }
+}
