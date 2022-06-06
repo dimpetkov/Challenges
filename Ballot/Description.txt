@@ -18,7 +18,7 @@ Implement getPluralityWinner, and add test cases to the
 main method to convince yourself that your code works for 
 all valid ballots.
 
-On to part 2! This problem will require more code to implement 
+On next part the problem will require more code to implement 
 than part 1, but perhaps you will be able to reuse part of your 
 previous code along the way...
 Problem statement
